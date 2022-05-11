@@ -2,9 +2,14 @@ package main
 
 import (
 	"database/sql"
+<<<<<<< HEAD
 	//"encoding/json"
+=======
+	"encoding/json"
+>>>>>>> 662a78db9e5a7cc87e8641035d013e62eff3d79b
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -41,6 +46,7 @@ func main() {
 	http.ListenAndServe(":8040", nil)
 
 }
+
 func home(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		btemp, err = template.ParseFiles("templates/base.gohtml")
@@ -120,6 +126,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 // }
 func signup(w http.ResponseWriter, r *http.Request) {
+<<<<<<< HEAD
 	//fmt.Fprintf(w, `welcome to blood bank`)
 
 	//fmt.Println("signup")
@@ -160,10 +167,42 @@ func signup(w http.ResponseWriter, r *http.Request) {
 		// }
 		// w.Header().Set("Content-Type", "application/json")
 		// fmt.Fprintln(w, string(bs))
+=======
+
+	if r.Method == http.MethodGet {
+
+		//fmt.Println("signup")
+		btemp, err = template.ParseFiles("webpage/signup.htm")
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		btemp.Execute(w, nil)
+
+	} else if r.Method == http.MethodPost {
+
+		r.ParseForm()
+		//fmt.Println("form:", r.Form)
+
+		name := r.FormValue("name")
+		email := r.FormValue("email")
+		pass := r.FormValue("password")
+		fmt.Println(name, email, pass)
+
+		//plain text
+		//fmt.Fprintln(w, "OK")
+		//json encoded text
+		bs, err := json.Marshal(r.Form)
+		if err != nil {
+			log.Println(err)
+		}
+		w.Header().Set("Content-Type", "application/json")
+		fmt.Fprintln(w, string(bs))
+>>>>>>> 662a78db9e5a7cc87e8641035d013e62eff3d79b
 	}
 
 }
 func signin(w http.ResponseWriter, r *http.Request) {
+<<<<<<< HEAD
 	if r.Method == http.MethodGet {
 		btemp, err = template.ParseFiles("webpage/signin.htm")
 		if err != nil {
@@ -200,28 +239,31 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprintln(w, `username or password is incorrect`)
 		}
 
+=======
+
+	btemp, err = template.ParseFiles("webpage/signin.htm")
+	if err != nil {
+		fmt.Println(err.Error())
+>>>>>>> 662a78db9e5a7cc87e8641035d013e62eff3d79b
 	}
 }
 func forgetPassword(w http.ResponseWriter, r *http.Request) {
-	//fmt.Fprintf(w, `welcome to blood bank`)
-	//	btemp.ExecuteTemplate(w, "base.gohtml", nil)
 
-	// btemp, err = template.ParseFiles("templates/base.gohtml")
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// }
 	btemp, err = template.ParseFiles("webpage/forget_password.gohtml")
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-
 	btemp.Execute(w, nil)
-
 }
 
 func register(w http.ResponseWriter, r *http.Request) {
+
 	// r.ParseForm()
+<<<<<<< HEAD
 	// //r.PostForm()
+=======
+	// r.PostForm()
+>>>>>>> 662a78db9e5a7cc87e8641035d013e62eff3d79b
 
 	// name := r.PostFormValue("name")
 	// // //lname := r.FormValue("lname")
@@ -257,7 +299,12 @@ func register(w http.ResponseWriter, r *http.Request) {
 	// defer insert.Close()
 	// fmt.Fprintln(w, `succesfully registered`)
 }
+
 func authentication(w http.ResponseWriter, r *http.Request) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 662a78db9e5a7cc87e8641035d013e62eff3d79b
 	found := false
 	email := r.FormValue("email")
 	pass := r.FormValue("password")
