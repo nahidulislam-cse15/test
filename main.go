@@ -51,13 +51,13 @@ func main() {
 
 func home(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		btemp, err = template.ParseFiles("templates/base.gohtml")
+		btemp, err = template.ParseGlob("templates/*.gohtml")
 		if err != nil {
 			fmt.Println(err.Error())
 		}
 
-		btemp.Execute(w, nil)
-	}//  else if r.Method == http.MethodPost {
+		btemp.ExecuteTemplate(w,"base.gohtml","Home")
+	// }else if r.Method == http.MethodPost {
 	// 	r.ParseForm()
 	// 	found := false
 	// 	email := r.FormValue("email")
@@ -79,19 +79,32 @@ func home(w http.ResponseWriter, r *http.Request) {
 	// 			break
 	// 		}
 	// 	}
+	// 	if found {
+	// 		fmt.Fprintln(w, `Log in succesfully`)
+	// 		btemp, err = template.ParseFiles("templates/base.gohtml")
+	// 		if err != nil {
+	// 			fmt.Println(err.Error())
+	// 		}
+
+	// 		btemp.Execute(w, nil)
+	// 		fmt.Fprintln(w, `Log in succesfully`)
+
+	// 	} else {
+	// 		fmt.Fprintln(w, `username or password is incorrect`)
+	// 	}
 		
 
-	// }
+	  }
 }
 
 func signup(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		btemp, err = template.ParseFiles("webpage/signup.html")
-		if err != nil {
-			fmt.Println(err.Error())
-		}
-
-		btemp.Execute(w, nil)
+		//btemp, err = template.ParseFiles("templates/signup.gohtml")
+		// if err != nil {
+		// 	fmt.Println(err.Error())
+		// }
+		
+		btemp.ExecuteTemplate(w,"signup.gohtml", "Sign Up")
 	} else if r.Method == http.MethodPost {
 		// btemp, err = template.ParseFiles("webpage/signin.html")
 		// if err != nil {
@@ -161,12 +174,12 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 func signin(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		btemp, err = template.ParseFiles("webpage/signin.html")
-		if err != nil {
-			fmt.Println(err.Error())
-		}
+		// btemp, err = template.ParseFiles("templates/signin.gohtml")
+		// if err != nil {
+		// 	fmt.Println(err.Error())
+		// }
 
-		btemp.Execute(w, nil)
+		btemp.ExecuteTemplate(w,"signin.gohtml", "SignIn")
 	}else if r.Method == http.MethodPost {
 		r.ParseForm()
 		found := false
@@ -189,14 +202,14 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if found {
-			fmt.Fprintln(w, `Log in succesfully`)
-			btemp, err = template.ParseFiles("templates/base.gohtml")
-			if err != nil {
-				fmt.Println(err.Error())
-			}
+			fmt.Fprintln(w, "Log in succesfully")
+			// btemp, err = template.ParseFiles("templates/base.gohtml")
+			// if err != nil {
+			// 	fmt.Println(err.Error())
+			// }
 
-			btemp.Execute(w, nil)
-			fmt.Fprintln(w, `Log in succesfully`)
+			// btemp.Execute(w, nil)
+			// fmt.Fprintln(w, `Log in succesfully`)
 
 		} else {
 			fmt.Fprintln(w, `username or password is incorrect`)
@@ -206,12 +219,12 @@ func signin(w http.ResponseWriter, r *http.Request) {
 func forgetPassword(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
-		fmt.Println("get")
-		btemp, err = template.ParseFiles("webpage/forget_password.html")
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	btemp.Execute(w, nil)
+	// 	fmt.Println("get")
+	// 	btemp, err = template.ParseFiles("webpage/forget_password.html")
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// }
+	btemp.ExecuteTemplate(w,"forget_password.gohtml","Forget Password")
 }else if r.Method == http.MethodPost {
 	r.ParseForm()
 	email := r.FormValue("email")
@@ -257,11 +270,11 @@ func authentication(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 		
-		btemp, err = template.ParseFiles("webpage/authentication.html")
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	btemp.Execute(w, nil)
+	// 	btemp, err = template.ParseFiles("webpage/authentication.html")
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// }
+	btemp.ExecuteTemplate(w,"authentication.gohtml","Authentication")
 }else if r.Method == http.MethodPost {
 	r.ParseForm()
 	otp2:= r.FormValue("otp")
@@ -276,11 +289,11 @@ func recoverPassword(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
 		
-		btemp, err = template.ParseFiles("webpage/recoverpassword.html")
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	btemp.Execute(w, nil)
+	// 	btemp, err = template.ParseFiles("webpage/recoverpassword.html")
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// }
+	btemp.ExecuteTemplate(w,"recover_password.gohtml","Recover Password")
 }else if r.Method == http.MethodPost {
 	r.ParseForm()
 	email := r.FormValue("email")

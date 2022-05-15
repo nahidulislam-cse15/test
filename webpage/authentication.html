@@ -25,8 +25,9 @@ body{
 </head>
 <body>
   <div class="container"> 
-    <section id ="header"><header class="mdc-top-app-bar">
-    <div class="mdc-top-app-bar__row">
+    <section id ="header">
+      <header class="mdc-top-app-bar">
+      <div class="mdc-top-app-bar__row">
       <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
         <button class="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button" aria-label="Open navigation menu">menu</button>
         <span class="mdc-top-app-bar__title">Test </span>
@@ -36,11 +37,36 @@ body{
         <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Search">search</button>
         <button class="material-icons mdc-top-app-bar__action-item mdc-icon-button" aria-label="Options">more_vert</button>
       </section>
-    </div>
-  </header>
+      </div>
+      </header>
 </section>
+<section id="drawer">
+      <aside class="mdc-drawer mdc-drawer--modal">
+        <div class="mdc-drawer__content">
+          <nav class="mdc-deprecated-list">
+            <a class="mdc-deprecated-list-item mdc-deprecated-list-item--activated" href="/" aria-current="page" tabindex="0">
+              <span class="mdc-deprecated-list-item__ripple"></span>
+              
+              <span class="mdc-deprecated-list-item__text">Home</span>
+            </a>
+            <a class="mdc-deprecated-list-item" href="/signin">
+              <span class="mdc-deprecated-list-item__ripple"></span>
+              
+              <span class="mdc-deprecated-list-item__text">Sign In</span>
+            </a>
+            <a class="mdc-deprecated-list-item" href="/signup">
+              <span class="mdc-deprecated-list-item__ripple"></span>
+            
+              <span class="mdc-deprecated-list-item__text">Sign Up</span>
+            </a>
+          </nav>
+        </div>
+      </aside>
+      <div id="scrollbar" class="mdc-drawer-scrim">
+      </div>
+    </section>
 
-  <div class="app_body">
+<div class="app_body">
     <section id="content">
 
  
@@ -94,6 +120,13 @@ body{
 <script src="https://unpkg.com/material-components-web@latest/dist/material-components-web.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
     <script>
+    const topAppBarElement = document.querySelector('.mdc-top-app-bar');
+const topAppBar =mdc.topAppBar.MDCTopAppBar.attachTo(topAppBarElement);
+const drawer = mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+  topAppBar.setScrollTarget(document.getElementById('scrollbar'));
+  topAppBar.listen('MDCTopAppBar:nav', ()=>{
+  drawer.open= !drawer.open;
+   });
     //  const formField = mdc.formField.MDCFormField.attachTo(document.querySelector('.mdc-form-field'));
     //const textField =mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
 const  textFieldelelem = [].slice.call(document.querySelectorAll('.mdc-text-field'));
@@ -121,11 +154,13 @@ $(document).ready(function () {
           error: function () { }
         }).done(function (res) {
           console.log(res);
-         // alert("hi")
-         // window.location.reload();
+         const checkres='verified\n'
+        if(res === checkres ){
+        window.location.assign("/recover")
+          }
         });
-       window.history.pushState("", "", "/recover");
-     setInterval('location.reload()', 2000);
+      // window.history.pushState("", "", "/recover");
+   //  setInterval('location.reload()', 2000);
     });
   });
     </script>

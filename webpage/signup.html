@@ -51,6 +51,31 @@
         </div>
       </header>
     </section>
+    <section id="drawer">
+      <aside class="mdc-drawer mdc-drawer--modal">
+        <div class="mdc-drawer__content">
+          <nav class="mdc-deprecated-list">
+            <a class="mdc-deprecated-list-item mdc-deprecated-list-item--activated" href="/" aria-current="page" tabindex="0">
+              <span class="mdc-deprecated-list-item__ripple"></span>
+              
+              <span class="mdc-deprecated-list-item__text">Home</span>
+            </a>
+            <a class="mdc-deprecated-list-item" href="/signin">
+              <span class="mdc-deprecated-list-item__ripple"></span>
+              
+              <span class="mdc-deprecated-list-item__text">Sign In</span>
+            </a>
+            <a class="mdc-deprecated-list-item" href="/signup">
+              <span class="mdc-deprecated-list-item__ripple"></span>
+            
+              <span class="mdc-deprecated-list-item__text">Sign Up</span>
+            </a>
+          </nav>
+        </div>
+      </aside>
+      <div id="scrollbar" class="mdc-drawer-scrim">
+      </div>
+    </section>
 
     <div class="app_body">
 
@@ -148,7 +173,13 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" referrerpolicy="no-referrer"></script>
 
   <script>
-
+    const topAppBarElement = document.querySelector('.mdc-top-app-bar');
+const topAppBar =mdc.topAppBar.MDCTopAppBar.attachTo(topAppBarElement);
+const drawer = mdc.drawer.MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+  topAppBar.setScrollTarget(document.getElementById('scrollbar'));
+  topAppBar.listen('MDCTopAppBar:nav', ()=>{
+  drawer.open= !drawer.open;
+   });
     //const formField = mdc.formField.MDCFormField.attachTo(document.querySelector('.mdc-form-field'));
     //const textField =mdc.textField.MDCTextField.attachTo(document.querySelector('.mdc-text-field'));
     const textFieldelelem = [].slice.call(document.querySelectorAll('.mdc-text-field'));
@@ -185,11 +216,14 @@
         }).done(function (res) {
 
           console.log(res);
-          window.history.pushState("", "", "/signin");
-           setInterval('location.reload()', 1000);
+          const checkres='succesfully registered\n';
+          if(res === checkres ){
+        window.location.assign("/signin");
+          //window.history.pushState("", "", "/signin");
+           //setInterval('location.reload()', 1000); 
           // window.location.reload();
           //location.reload();
-
+        }
         });
         return false;
 
