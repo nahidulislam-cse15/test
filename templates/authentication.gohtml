@@ -2,111 +2,94 @@
 {{template "header".}}
 
 <body>
-<div class="container">
-{{template "nav-menu"}}
- 
-<div class="app_body">
-    <section id="content">
+  <div class="container">
+  {{template "nav-menu"}}
+  
+    <div class="app_body">
+        <section id="content">
 
- 
-  <div class="mdc-layout-grid" >
-    <div class="mdc-layout-grid__inner">
-      <div class="mdc-layout-grid__cell">
-        
-      <form id="verifyForm" > 
-        <div class="mdc-card">
-          <!-- <div class="mdc-card__primary-action"> -->
-        
-            <!-- ... additional primary action content ... -->
-            <div class="mdc-form-field form-input-style">
-            <label class="mdc-text-field mdc-text-field--outlined">
-              <span class="mdc-notched-outline">
-                <span class="mdc-notched-outline__leading"></span>
-                <span class="mdc-notched-outline__notch">
-                  <span class="mdc-floating-label" id="my-label-id">ENTER YOUR OTP</span>
-                </span>
-                <span class="mdc-notched-outline__trailing"></span>
-              </span>
-              <input name="otp" id="otp"  type="text" class="mdc-text-field__input" aria-labelledby="my-label-id">
-            </label>
-          </div>
-          </div>
     
-          <div class="mdc-card__actions">
-            <div class="mdc-card__action-buttons">
-                <button type="submit" class="mdc-button mdc-card__action mdc-card__action--button">
-                    <div class="mdc-button__ripple"></div>
-                    <span class="mdc-button__label">verify</span>
-                  </button>
-                </div>      
-            <div class="mdc-card__action-icons">
-              <!-- <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="Share">share</button>
-              <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="More options">more_vert</button> -->
-            </div>
+      <div class="mdc-layout-grid" >
+        <div class="mdc-layout-grid__inner">
+          <div class="mdc-layout-grid__cell">
+            
+          <form id="verifyForm" > 
+            <div class="mdc-card">
+              <!-- <div class="mdc-card__primary-action"> -->
+            
+                <!-- ... additional primary action content ... -->
+                <div class="mdc-form-field form-input-style">
+                <label class="mdc-text-field mdc-text-field--outlined">
+                  <span class="mdc-notched-outline">
+                    <span class="mdc-notched-outline__leading"></span>
+                    <span class="mdc-notched-outline__notch">
+                      <span class="mdc-floating-label" id="my-label-id">ENTER YOUR OTP</span>
+                    </span>
+                    <span class="mdc-notched-outline__trailing"></span>
+                  </span>
+                  <input name="otp" id="otp"  type="text" class="mdc-text-field__input" aria-labelledby="my-label-id">
+                </label>
+              </div>
+              </div>
+        
+              <div class="mdc-card__actions">
+                <div class="mdc-card__action-buttons">
+                    <button type="submit" class="mdc-button mdc-card__action mdc-card__action--button">
+                        <div class="mdc-button__ripple"></div>
+                        <span class="mdc-button__label">verify</span>
+                      </button>
+                    </div>      
+                <div class="mdc-card__action-icons">
+                  <!-- <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="Share">share</button>
+                  <button class="material-icons mdc-icon-button mdc-card__action mdc-card__action--icon" title="More options">more_vert</button> -->
+                </div>
+              </div>
+            </form>
           </div>
-        </form>
-      </div>
-     
+        
 
+          </div>
+          
+        </div>
       </div>
-      
+      </section>
     </div>
   </div>
-  </section>
-</div>
-</div>
-{{template "Base-script"}}
-<script>
-const textFieldelelem = [].slice.call(document.querySelectorAll('.mdc-text-field'));
+  {{template "Base-script"}}
+  <script>
+    const textFieldelelem = [].slice.call(document.querySelectorAll('.mdc-text-field'));
     textFieldelelem.forEach((textFieldel) => {
       mdc.textField.MDCTextField.attachTo(textFieldel);
     });
-$(document).ready(function () {
+    $(document).ready(function () {
+      $("#verifyForm").submit(function (e) {
 
-      //alert('jquery');
-      $("#signup").submit(function (e) {
-
-        //alert('hi form');
-        // var name=$('#signup').find('input[name="name"]').val();
-        // var email=$('#signup').find('input[name="email"]').val();
-        // var password=$('#signup').find('input[name="password"]').val();
-        // alert(`${name}-${email}-${password}`);
-
-        // var name=$('#name').val();
-        // var email=$('#email').val();
-        // var password=$('#pass').val();
-        // alert(`${name}-${email}-${password}`);
+        // Stop form from submitting normally
         e.preventDefault();
-
+        //alert("hi")
+        //get by id
+        //var otp = $("#otp").val()
+      // alert(otp)
         $.ajax({
           async: true,
           type: "POST",
-          dataType: "text",//json|text
-          url: '/signup',
-          data: $("#signup").serialize(),
+          dataType: "text",
+          url: '/authentication',
+          data: $('#verifyForm').serialize(),
           success: function () { },
           error: function () { }
-
         }).done(function (res) {
-
           console.log(res);
-          const checkres='succesfully registered\n';
-          if(res === checkres ){
-        window.location.assign("/signin");
-          //window.history.pushState("", "", "/signin");
-           //setInterval('location.reload()', 1000); 
-          // window.location.reload();
-          //location.reload();
-        }
+         const checkres='verified\n'
+        if(res === checkres ){
+        window.location.assign("/recover")
+          }
         });
-        return false;
-
+      
+        });
       });
 
-
-
-    });
-</script>
+  </script>
 </body>
 
 </html>

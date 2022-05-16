@@ -43,8 +43,6 @@ func main() {
 	http.HandleFunc("/registered", register)
 	http.HandleFunc("/authentication", authentication)
 	http.HandleFunc("/recover", recoverPassword)
-	// 	http.Handle("/resources/", http.StripPrefix("/resources/", http.FileServer(http.Dir("../asset"))))
-
 	http.ListenAndServe(":8040", nil)
 
 }
