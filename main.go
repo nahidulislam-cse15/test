@@ -26,7 +26,7 @@ func init() {
 		fmt.Println(err.Error())
 	}
 	//defer db.Close()
-	//fmt.Println("db connection succesful")
+	fmt.Println("db connection succesful")
 }
 
 type user struct {
@@ -35,12 +35,14 @@ type user struct {
 }
 
 func main() {
-
+	btemp, err = template.ParseGlob("templates/*.gohtml")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 	http.HandleFunc("/", home)
 	http.HandleFunc("/signup", signup)
 	http.HandleFunc("/signin", signin)
 	http.HandleFunc("/forget", forgetPassword)
-	http.HandleFunc("/registered", register)
 	http.HandleFunc("/authentication", authentication)
 	http.HandleFunc("/recover", recoverPassword)
 	http.ListenAndServe(":8040", nil)
@@ -49,68 +51,17 @@ func main() {
 
 func home(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		btemp, err = template.ParseGlob("templates/*.gohtml")
-		if err != nil {
-			fmt.Println(err.Error())
-		}
-
+	
 		btemp.ExecuteTemplate(w,"base.gohtml","Home")
-	// }else if r.Method == http.MethodPost {
-	// 	r.ParseForm()
-	// 	found := false
-	// 	email := r.FormValue("email")
-	// 	pass := r.FormValue("password")
-	// 	fmt.Println(email, pass)
-	// 	qs := "select email,password from `users`"
-	// 	rows, err := db.Query(qs)
-	// 	if err != nil {
-	// 		panic(err.Error())
-	// 	}
-	// 	defer rows.Close()
-	// 	for rows.Next() {
-	// 		var u user
-	// 		if err := rows.Scan(&u.Email, &u.Password); err != nil {
-	// 			fmt.Println(err)
-	// 		}
-	// 		if (u.Email == email) && (u.Password == pass) {
-	// 			found = true
-	// 			break
-	// 		}
-	// 	}
-	// 	if found {
-	// 		fmt.Fprintln(w, `Log in succesfully`)
-	// 		btemp, err = template.ParseFiles("templates/base.gohtml")
-	// 		if err != nil {
-	// 			fmt.Println(err.Error())
-	// 		}
-
-	// 		btemp.Execute(w, nil)
-	// 		fmt.Fprintln(w, `Log in succesfully`)
-
-	// 	} else {
-	// 		fmt.Fprintln(w, `username or password is incorrect`)
-	// 	}
-		
-
-	  }
+	}
+	
 }
 
 func signup(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		//btemp, err = template.ParseFiles("templates/signup.gohtml")
-		// if err != nil {
-		// 	fmt.Println(err.Error())
-		// }
-		
 		btemp.ExecuteTemplate(w,"signup.gohtml", "Sign Up")
 	} else if r.Method == http.MethodPost {
-		// btemp, err = template.ParseFiles("webpage/signin.html")
-		// if err != nil {
-		// 	fmt.Println(err.Error())
-		// }
-
-		// btemp.Execute(w, nil)
-		
+			
 		r.ParseForm()
 		name := r.FormValue("name")
 		email := r.FormValue("email")
@@ -172,11 +123,6 @@ func signup(w http.ResponseWriter, r *http.Request) {
 
 func signin(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
-		// btemp, err = template.ParseFiles("templates/signin.gohtml")
-		// if err != nil {
-		// 	fmt.Println(err.Error())
-		// }
-
 		btemp.ExecuteTemplate(w,"signin.gohtml", "SignIn")
 	}else if r.Method == http.MethodPost {
 		r.ParseForm()
@@ -200,15 +146,7 @@ func signin(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		if found {
-			fmt.Fprintln(w, "Log in succesfully")
-			// btemp, err = template.ParseFiles("templates/base.gohtml")
-			// if err != nil {
-			// 	fmt.Println(err.Error())
-			// }
-
-			// btemp.Execute(w, nil)
-			// fmt.Fprintln(w, `Log in succesfully`)
-
+			fmt.Fprintln(w, "Log in succesfully")			
 		} else {
 			fmt.Fprintln(w, `username or password is incorrect`)
 		}
@@ -217,19 +155,36 @@ func signin(w http.ResponseWriter, r *http.Request) {
 func forgetPassword(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
-	// 	fmt.Println("get")
-	// 	btemp, err = template.ParseFiles("webpage/forget_password.html")
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// }
 	btemp.ExecuteTemplate(w,"forget_password.gohtml","Forget Password")
-}else if r.Method == http.MethodPost {
-	r.ParseForm()
-	email := r.FormValue("email")
-	fmt.Println("post")
-	otp = strconv.Itoa(rand.Intn(10000))
-	emailSend(email,otp)
-}
+	}else if r.Method == http.MethodPost {
+		r.ParseForm()
+		email := r.FormValue("email")
+		found := false				
+		qs := "select email from `users`"
+		rows, err := db.Query(qs)
+		if err != nil {
+			panic(err.Error())
+		}
+		defer rows.Close()
+		for rows.Next() {
+			var u user
+			if err := rows.Scan(&u.Email); err != nil {
+				fmt.Println(err)
+			}
+			if (u.Email == email ) {
+				found = true
+				break
+			}
+		}
+		if found {
+			fmt.Fprint(w, `user email found`)
+			otp = strconv.Itoa(rand.Intn(10000))
+			emailSend(email,otp)		
+		} else {
+			fmt.Fprintln(w, `user email not found`)
+		}
+	
+		}	
 }
 func emailSend(toEmail ,otp string){
 	from := "nahidulss@gmail.com" //ex: "John.Doe@gmail.com"
@@ -244,7 +199,7 @@ func emailSend(toEmail ,otp string){
 	address := host + ":" + port
 	// message
 	subject := "Subject: OTP\n\n"
-	body := "Your OTP is:\n" +otp
+	body := "Your OTP is:\n" + otp
 	fmt.Println(body)
 	message := []byte(subject + body)
 	fmt.Println(message)
@@ -260,20 +215,12 @@ func emailSend(toEmail ,otp string){
 	}
 	fmt.Println("email successfully sent")
 }
-func register(w http.ResponseWriter, r *http.Request) {
-
-}
 
 func authentication(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
-		
-	// 	btemp, err = template.ParseFiles("webpage/authentication.html")
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// }
 	btemp.ExecuteTemplate(w,"authentication.gohtml","Authentication")
-}else if r.Method == http.MethodPost {
+	}else if r.Method == http.MethodPost {
 	r.ParseForm()
 	otp2:= r.FormValue("otp")
 	if(otp2 ==otp){
@@ -286,18 +233,14 @@ func authentication(w http.ResponseWriter, r *http.Request) {
 func recoverPassword(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
-		
-	// 	btemp, err = template.ParseFiles("webpage/recoverpassword.html")
-	// if err != nil {
-	// 	fmt.Println(err.Error())
-	// }
 	btemp.ExecuteTemplate(w,"recover_password.gohtml","Recover Password")
-}else if r.Method == http.MethodPost {
+	}else if r.Method == http.MethodPost {
 	r.ParseForm()
 	email := r.FormValue("email")
 	newpassword := r.FormValue("newpassword")
 	confirmpassword := r.FormValue("confirmpassword")
 	fmt.Println(email,newpassword,confirmpassword)
+	if(newpassword==confirmpassword){
 	upStmt := "UPDATE `demo`.`users` SET `Password` = ? WHERE (`Email` = ?);"
 	// stmt:=fmt.Sprintf(upStmt,newpassword,email)
 	//fmt.Println("db.Prepare stmt:", stmt)
@@ -307,8 +250,8 @@ func recoverPassword(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("error preparing stmt")
 		panic(err)
 	}
-	fmt.Println("db.Prepare err:", err)
-	fmt.Println("db.Prepare stmt:", stmt)
+	//fmt.Println("db.Prepare err:", err)
+	//fmt.Println("db.Prepare stmt:", stmt)
 	defer stmt.Close()
 	var res sql.Result
 	// func (s *Stmt) Exec(args ...interface{}) (Result, error)
@@ -321,6 +264,10 @@ func recoverPassword(w http.ResponseWriter, r *http.Request) {
 	}else{
 	fmt.Fprintln(w,  "Password was Successfully Updated")
 	fmt.Println(res.RowsAffected())
-}
-}
+	}
+	}else{
+		fmt.Fprintln(w, "Password Does Not Match")
+
+	}
+	}
 }
